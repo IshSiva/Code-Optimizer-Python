@@ -1,7 +1,0 @@
-s = input()
-
-
-rhs = s.split("=")
-
-for i in rhs:
-

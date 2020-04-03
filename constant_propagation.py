@@ -1,7 +1,7 @@
 import re
 
 
-class ConstantFolding:
+class ConstantPropagation:
 
     def __init__(self, fname):
         self.fname = fname

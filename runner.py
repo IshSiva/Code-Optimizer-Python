@@ -1,5 +1,8 @@
-from constant_folding import ConstantFolding as cf
+from constant_propagation import ConstantPropagation as cp
+from strength_red import StrengthReduction as sr
 
+consprop = cp("test.py")
+consprop.run_optim()
 
-consfol = cf("test.py")
-consfol.run_optim()
+strred = sr("test2.py")
+strred.run_optim()

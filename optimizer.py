@@ -2,7 +2,7 @@ hello("jkjwe")
 for i in range(10):
     print("a")
 for j in range(10):
-    m*=5
+    m=m*5
     print("Second loop")
 c=10
 hi
