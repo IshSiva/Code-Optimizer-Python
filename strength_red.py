@@ -1,4 +1,4 @@
-import re
+import re 
 
 
 class StrengthReduction:
@@ -11,7 +11,7 @@ class StrengthReduction:
 
         f = open(self.fname, "r")
         lines = f.readlines()
-
+        
 
         s="([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9])*\=([a-z]|[A-Z]|[0-9])+((\*)|(\*\*))([0-9])+"
         s=re.compile(s)

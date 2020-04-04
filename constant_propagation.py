@@ -11,7 +11,7 @@ class ConstantPropagation:
         f=open(self.fname,'r')
         f2 = open("optimizer.py", "w+")
 
-        s="([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|\d)*=\d+$|([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|\d)*=\"\w+\"$|([a-z]|[A-Z]|_)+([a-z]|[A-Z]|_|\d)*=\'\w+\'$"
+        s="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+([\+\-\*\/]*([0-9]|[A-Z]|[a-z]|_))*"
         s=re.compile(s)
         assignments=[]
         l = []
@@ -21,6 +21,7 @@ class ConstantPropagation:
                 l.append(line_i)
                 assignments.append(line[:-1])
         
+
        
         
         f.seek(0)
@@ -32,15 +33,24 @@ class ConstantPropagation:
             lhs=a[0]
             rhs=a[1]
             
-            identifier="\w=((\w+|\d+)(\+|\-|\*|\/|\^))*"+lhs+"((\+|\-|\*|\/|\^)(\w+|\d+))*$"
+            identifier="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+[\+\-\*\/\^]([0-9]|[A-Z]|[a-z]|_)"
             identifier=re.compile(identifier)
             
             
-            before=re.compile("(=|\+|\-|\*|\/|\^)+"+lhs+"[^\w]((\+|\-|\*|\/|\^)){0,1}")
+            #before=re.compile("(=|\+|\-|\*|\/|\^)+"+lhs+"[^\w]((\+|\-|\*|\/|\^)){0,1}")
             
             for j in range(l[i],line_i):
                 if re.match(s,line[j]):
                     if line[j].split('=')[0]==lhs:
+
+                        if(lhs in line[j].split('=')[1]):
+                            olstr = line[j].split('=')[1]
+                            nstr = olstr.replace(lhs,rhs)
+                            ans = line[j].split('=')[0]+'='+nstr
+                            line[j] = ans
+         
+
+
                         break                
 
                 
@@ -48,6 +58,7 @@ class ConstantPropagation:
                 if z:
 
                     if(line[j].split('=')[0] == lhs):
+
                         olstr = line[j].split('=')[1]
                         nstr = olstr.replace(lhs,rhs)
                         ans = z.group().split('=')[0]+'='+nstr
