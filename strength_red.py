@@ -16,10 +16,10 @@ class StrengthReduction:
         s="([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9])*\=([a-z]|[A-Z]|[0-9])+((\*)|(\*\*))([0-9])+"
         s=re.compile(s)
 
-        print(lines)
+        #print(lines)
         for j in range(len(lines)):
             if(s.search(lines[j])):
-                print(lines[j])
+                #print(lines[j])
                 rhs = lines[j].split('=')[1]
 
 

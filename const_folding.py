@@ -32,7 +32,7 @@ class ConstantFolding:
 				lines[j] = s
 
 
-		f= open("optim3.py", "w")
+		f= open("optimizer.py", "w")
 		f.writelines(lines)
 		f.close()
 

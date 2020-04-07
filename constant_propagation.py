@@ -9,7 +9,7 @@ class ConstantPropagation:
 
     def run_optim(self):
         f=open(self.fname,'r')
-        f2 = open("optimizer.py", "w+")
+        f2 = open("optim3.py", "w+")
 
         s="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+([\+\-\*\/]*([0-9]|[A-Z]|[a-z]|_))*"
         s=re.compile(s)
@@ -18,26 +18,32 @@ class ConstantPropagation:
 
         for line_i,line in enumerate(f,1):    
             if s.search(line):
-                l.append(line_i)
-                assignments.append(line[:-1])
-        
+                
+                st = s.search(line).group()
+                lhs= st.split("=")[0]
+                rhs = st.split("=")[1]
+                if lhs not in rhs:
+
+                    l.append(line_i)
+                    assignments.append(line[:-1])
+                    
 
        
         
         f.seek(0)
         line = f.readlines()
-        
+        #print(assignments)
 
         for i in range(0,len(l)):
             a=assignments[i].split('=')
             lhs=a[0]
             rhs=a[1]
+
+
             
             identifier="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+[\+\-\*\/\^]([0-9]|[A-Z]|[a-z]|_)"
             identifier=re.compile(identifier)
             
-            
-            #before=re.compile("(=|\+|\-|\*|\/|\^)+"+lhs+"[^\w]((\+|\-|\*|\/|\^)){0,1}")
             
             for j in range(l[i],line_i):
                 if re.match(s,line[j]):
@@ -81,3 +87,8 @@ class ConstantPropagation:
         f2.close()
         
         f.close()
+
+
+
+#cp = ConstantPropagation("optim2.py")
+#cp.run_optim()

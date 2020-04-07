@@ -11,7 +11,7 @@ e=d**2
 f=a+5+c
 for i in range(0,5):
 	print(i)
-g=a+b+f
+g=d+f
 
 
 print("the code is complete")
