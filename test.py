@@ -6,7 +6,6 @@ for j in range(10):
     print("Second loop")
 c=10
 hi
-s=c+2
 c=23
 d=242343
 print("hello")

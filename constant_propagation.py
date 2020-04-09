@@ -8,87 +8,48 @@ class ConstantPropagation:
 
 
     def run_optim(self):
-        f=open(self.fname,'r')
-        f2 = open("optim3.py", "w+")
+        id_pat = "([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9])*=(([a-z]|[A-Z]|[0-9]+)|(\"\w+\"))"
+        id_pat = re.compile(id_pat)
+        f = open(self.fname, "r")
+        lines = f.readlines()
+        f.close()
+        for line_num in range(len(lines)):
 
-        s="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+([\+\-\*\/]*([0-9]|[A-Z]|[a-z]|_))*"
-        s=re.compile(s)
-        assignments=[]
-        l = []
+            if id_pat.search(lines[line_num]):
 
-        for line_i,line in enumerate(f,1):    
-            if s.search(line):
-                
-                st = s.search(line).group()
-                lhs= st.split("=")[0]
-                rhs = st.split("=")[1]
-                if lhs not in rhs:
+                lines[line_num] = lines[line_num].strip("\n")
+                lhs = lines[line_num].split("=")[0]
+                rhs = lines[line_num].split("=")[1]
+                #print(lhs,rhs)
 
-                    l.append(line_i)
-                    assignments.append(line[:-1])
-                    
+                if(lhs not in rhs):
+                    for rep in range(line_num+1, len(lines)):
+                        if id_pat.search(lines[rep]):
+                            #print(lhs,lines[rep].split("=")[0] )
+                            if lhs == lines[rep].split("=")[0]:
+                                if lhs in lines[rep].split("=")[1]:
+                                    
+                                    #print(lines[rep].split("=")[1].replace(lhs,rhs))
 
-       
-        
-        f.seek(0)
-        line = f.readlines()
-        #print(assignments)
+                                    nstr = lines[rep].split("=")[1].replace(lhs,rhs)
+                                    
+                                    lines[rep] = lines[rep].split("=")[0]+"="+nstr
+                                    #print(lines[rep])
 
-        for i in range(0,len(l)):
-            a=assignments[i].split('=')
-            lhs=a[0]
-            rhs=a[1]
-
-
-            
-            identifier="([a-z]|[A-Z]|_)([a-z][A-Z][0-9])*=([0-9]|[A-Z]|[a-z]|_)+[\+\-\*\/\^]([0-9]|[A-Z]|[a-z]|_)"
-            identifier=re.compile(identifier)
-            
-            
-            for j in range(l[i],line_i):
-                if re.match(s,line[j]):
-                    if line[j].split('=')[0]==lhs:
-
-                        if(lhs in line[j].split('=')[1]):
-                            olstr = line[j].split('=')[1]
-                            nstr = olstr.replace(lhs,rhs)
-                            ans = line[j].split('=')[0]+'='+nstr
-                            line[j] = ans
-         
+                                    
+                                break
 
 
-                        break                
+                            elif lhs in lines[rep].split("=")[1]:
 
-                
-                z =re.match(identifier,line[j]) 
-                if z:
+                                nstr = lines[rep].split("=")[1].replace(lhs,rhs)
+                                #print(lhs,nstr)
+                                lines[rep] = lines[rep].split("=")[0]+"="+nstr
+                                #print(lhs, lines[rep])
 
-                    if(line[j].split('=')[0] == lhs):
+                lines[line_num]+="\n"
 
-                        olstr = line[j].split('=')[1]
-                        nstr = olstr.replace(lhs,rhs)
-                        ans = z.group().split('=')[0]+'='+nstr
-                        line[j] = ans
-                        break
-
-                    else:
-                        olstr = line[j].split('=')[1]
-                        nstr = olstr.replace(lhs,rhs)
-                        ans = z.group().split('=')[0]+'='+nstr
-                        line[j] = ans
-                        
-
-            
-
-
-        f2.writelines(line)    
-        
-        
-        f2.close()
-        
+        f = open("optim3.py", "w")
+        f.writelines(lines)
         f.close()
 
-
-
-#cp = ConstantPropagation("optim2.py")
-#cp.run_optim()
